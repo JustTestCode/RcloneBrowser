@@ -17,6 +17,7 @@ jobs:
       - name: Install Qt
         uses: jurplel/install-qt-action@v2.14.0
         with:
+          dir: C:\
           version: 5.14.2
           arch: win64_msvc2017_64
       - uses: actions/checkout@v3
