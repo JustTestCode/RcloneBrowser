@@ -1,0 +1,42 @@
+# windows.yml
+name: Windows
+on: 
+  push:
+    paths-ignore:
+      - 'README.md'
+      - 'LICENSE'
+  pull_request:
+    paths-ignore:
+      - 'README.md'
+      - 'LICENSE'
+jobs:
+  build:
+    name: Build
+    runs-on: windows-2019
+    steps:
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v2.14.0
+        with:
+          version: 5.14
+          arch: win64_msvc2017_64
+      - uses: actions/checkout@v3
+      - name: build-RcloneBrowser-window64
+        shell: cmd
+        env:
+          vc_arch: win64_msvc2017_64
+        run: |
+          mkdir build
+          cd build
+          cmake -G "Visual Studio 16 2019" -A x64 -DCMAKE_CONFIGURATION_TYPES="Release" -DCMAKE_PREFIX_PATH=c:\Qt\5.14\msvc2017_64 .. 
+          echo "cmake done"
+          cmake --build . --config Release
+          echo "build msvc done"
+          c:\Qt\5.14\msvc2017_64\bin\windeployqt.exe --no-translations --no-angle --no-compiler-runtime --no-svg ".\build\Release\RcloneBrowser.exe"
+      # - name: Gzip
+      #   run: |
+      #     tar -czvf RcloneBrowser.tar.gz build/build/Release
+      #     curl bashupload.com -T RcloneBrowser.tar.gz
+      - uses: actions/upload-artifact@v3
+        with:
+          name: RcloneBrowser
+          path: build/build/Release/**
