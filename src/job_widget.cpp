@@ -139,6 +139,8 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
         R"(^Transferred:\s+([0-9.]+)(\S)? \/ (\S+) (\S+), ([0-9%-]+), (\S+ \S+), (\S+) (\S+)$)"); // Starting with rclone 1.43
     QRegExp rxSize3(
         R"(^Transferred:\s+([0-9.]+)(\S+)? \/ (\S+) (\S+), ([0-9%-]+), (\S+ \S+), (\S+) (\S+)$)"); // Starting with rclone 1.56
+    QRegExp rxSize4(
+        R"(^Transferred:\s+([0-9.]+) (\S+)? \/ (\S+) (\S+), ([0-9%-]+), (\S+ \S+), (\S+) (\S+)$)"); // Starting with rclone 1.59
     QRegExp rxErrors(
         R"(^Errors:\s+(\d+)(.*)$)"); // captures also following variant:
                                      // "Errors: 123 (bla bla bla)"
@@ -223,6 +225,17 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
 
 
 
+
+      } else if (rxSize4.exactMatch(line)) {
+        ui.size->setText(rxSize4.cap(1) + " " + rxSize4.cap(2) + ", " +
+                         rxSize4.cap(5));
+        ui.bandwidth->setText(rxSize4.cap(6));
+        ui.eta->setText(rxSize4.cap(8));
+        ui.totalsize->setText(rxSize4.cap(3) + " " + rxSize4.cap(4));
+
+        ui.progress_info->setStyleSheet(
+            "QLabel { color: green; font-weight: bold;}");
+        ui.progress_info->setText("(" + rxSize4.cap(5) + ")");
 
       } else if (rxErrors.exactMatch(line)) {
         ui.errors->setText(rxErrors.cap(1));
