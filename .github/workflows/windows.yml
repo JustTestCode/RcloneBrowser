@@ -33,11 +33,12 @@ jobs:
           cmake --build . --config Release
           echo "build msvc done"
           c:\Qt\5.14.2\msvc2017_64\bin\windeployqt.exe --no-translations --no-angle --no-compiler-runtime --no-svg ".\build\Release\RcloneBrowser.exe"
-      # - name: Gzip
-      #   run: |
-      #     tar -czvf RcloneBrowser.tar.gz build/build/Release
-      #     curl bashupload.com -T RcloneBrowser.tar.gz
-      - uses: actions/upload-artifact@v3
-        with:
-          name: RcloneBrowser.zip
-          path: build/build/Release/**
+      - name: Gzip
+        run: |
+          tar -czvf RcloneBrowser.winx64.tar.gz build/build/Release
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with: 
+          files: RcloneBrowser.winx64.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
