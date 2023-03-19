@@ -39,6 +39,6 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with: 
-          files: build/build/Release/RcloneBrowser.win64.zip
+          files: RcloneBrowser.win64.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
