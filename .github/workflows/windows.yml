@@ -35,8 +35,7 @@ jobs:
           c:\Qt\5.14.2\msvc2017_64\bin\windeployqt.exe --no-translations --no-angle --no-compiler-runtime --no-svg ".\build\Release\RcloneBrowser.exe"
       - name: Gzip
         run: |
-          cd build/build/Release
-          zip RcloneBrowser.win64.zip .
+          Compress-Archive -Path build/build/Release RcloneBrowser.win64.zip
       - name: Release
         uses: softprops/action-gh-release@v1
         with: 
